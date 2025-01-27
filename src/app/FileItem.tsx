@@ -1,10 +1,10 @@
 'use client';
 
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
 import DescriptionIcon from '@mui/icons-material/Description';
-import { useMemo } from "react";
+import {useMemo} from 'react';
 
 type Props = {
   file: File;
@@ -23,14 +23,14 @@ const FileItem = ({file}: Props) => {
       index++;
     }
     return `${tmpSize.toFixed(2).replace(/\.00$/, '')}${UNITS[index]}`;
-  }, [size])
+  }, [size]);
 
   return <ListItem>
     <ListItemAvatar>
       <DescriptionIcon />
     </ListItemAvatar>
     <ListItemText primary={name} secondary={prettySize} />
-  </ListItem>
+  </ListItem>;
 };
 
 export default FileItem;

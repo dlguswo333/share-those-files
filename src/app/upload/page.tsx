@@ -4,10 +4,10 @@ import useUpload from './useUpload';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import FileItem from '@/app/FileItem';
-import { Fragment, useRef } from 'react';
-import { Divider } from '@mui/material';
+import {Fragment, useRef} from 'react';
+import {Divider} from '@mui/material';
 
-export default function Upload() {
+export default function Upload () {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const {
     files,

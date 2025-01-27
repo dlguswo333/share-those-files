@@ -1,4 +1,4 @@
-import { ChangeEvent, DragEvent, RefObject, useCallback, useState } from "react";
+import {ChangeEvent, DragEvent, RefObject, useCallback, useState} from 'react';
 
 const excludeFolders = async (files: File[]) => {
   return (
@@ -18,8 +18,8 @@ type Props = {
 }
 
 const useUpload = ({inputRef}: Props) => {
-  const [okayToContinue, /* setOkayToContinue */] = useState(false);
-  const [files, setFiles]= useState<File[] | null>(null);
+  const [okayToContinue /* setOkayToContinue */] = useState(false);
+  const [files, setFiles] = useState<File[] | null>(null);
 
   const onDragOverEvent = useCallback((e: DragEvent<HTMLElement>) => {
     e.preventDefault();
@@ -51,7 +51,7 @@ const useUpload = ({inputRef}: Props) => {
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,
-  }
-}
+  };
+};
 
 export default useUpload;

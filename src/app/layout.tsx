@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
-import "./globals.css";
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import type {Metadata} from 'next';
+import {Roboto} from 'next/font/google';
+import './globals.css';
+import {AppRouterCacheProvider} from '@mui/material-nextjs/v15-appRouter';
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: 'Share files easily, simply.',
 };
 
-export default function RootLayout({
+export default function RootLayout ({
   children,
 }: Readonly<{
   children: React.ReactNode;
