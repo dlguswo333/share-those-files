@@ -45,12 +45,17 @@ const useUpload = ({inputRef}: Props) => {
     setFiles(filesExcludingFolders);
   }, []);
 
+  const clickInputElement = useCallback(() => {
+    inputRef.current?.click();
+  }, [inputRef]);
+
   return {
     okayToContinue,
     files,
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,
+    clickInputElement,
   };
 };
 

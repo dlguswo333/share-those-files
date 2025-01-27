@@ -25,4 +25,9 @@
     padding: 40px 60px;
     border: 1px solid #9999;
     border-radius: 8px;
+    gap: 20px;
+}
+
+.page .inputArea input[type="file"] {
+    display: none;
 }

@@ -14,7 +14,8 @@ export default function Upload () {
     okayToContinue,
     onDragOverEvent,
     onDropEvent,
-    onChangeEvent
+    onChangeEvent,
+    clickInputElement,
   } = useUpload({inputRef});
 
   return (
@@ -27,6 +28,7 @@ export default function Upload () {
         onDrop={onDropEvent}>
         <div>Drag and drop files here.</div>
         <input type='file' multiple={true} onChange={onChangeEvent} ref={inputRef} />
+        <Button variant='contained' onClick={clickInputElement}>Choose File</Button>
       </div>
       {!!files && <List
         sx={{minWidth: '300px', maxWidth: '90vw', border: '1px solid #9999', borderRadius: '8px'}}>
