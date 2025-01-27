@@ -37,7 +37,7 @@ export default function Upload () {
         <input type='file' multiple={true} onChange={onChangeEvent} ref={inputRef} />
         <Button variant='contained' onClick={clickInputElement}>Choose File</Button>
       </div>
-      {!!files && <List
+      {!!files?.length && <List
         sx={{minWidth: '300px', maxWidth: '90vw', border: '1px solid #9999', borderRadius: '8px'}}>
         {files.map((file, index) => (
           <Fragment key={index}>
