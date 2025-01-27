@@ -11,17 +11,24 @@ export default function Upload () {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const {
     files,
-    okayToContinue,
+    okayToUpload,
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,
     clickInputElement,
+    upload,
   } = useUpload({inputRef});
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <Button variant={okayToContinue ? 'contained' : 'outlined'} disabled={!okayToContinue}>OK</Button>
+        <Button
+          variant={okayToUpload ? 'contained' : 'outlined'}
+          disabled={!okayToUpload}
+          onClick={upload}
+        >
+          OK
+        </Button>
       </header>
       <div className={styles.inputArea}
         onDragOver={onDragOverEvent}
