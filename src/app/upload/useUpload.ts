@@ -17,8 +17,10 @@ type Props = {
   inputRef: RefObject<HTMLInputElement | null>;
 }
 
+type Status = 'idle' | 'okayToUpload' | 'uploading' | 'uploadError';
+
 const useUpload = ({inputRef}: Props) => {
-  const [okayToUpload, setOkayToUpload] = useState(false);
+  const [status, setStatus] = useState<Status>('idle');
   const [files, setFiles] = useState<File[] | null>(null);
 
   const onDragOverEvent = useCallback((e: DragEvent<HTMLElement>) => {
@@ -27,6 +29,9 @@ const useUpload = ({inputRef}: Props) => {
 
   const onDropEvent = useCallback(async (e: DragEvent<HTMLElement>) => {
     e.preventDefault();
+    if (status === 'uploading') {
+      return;
+    }
     const fileList = e.dataTransfer.files;
 
     const filesExcludingFolders = await excludeFolders([...fileList]);
@@ -34,16 +39,19 @@ const useUpload = ({inputRef}: Props) => {
     if (inputRef.current) {
       inputRef.current.files = fileList;
     }
-  }, [inputRef]);
+  }, [inputRef, status]);
 
   const onChangeEvent = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
+    if (status === 'uploading') {
+      return;
+    }
     const fileList = e.target.files;
     if (!fileList) {
       return;
     }
     const filesExcludingFolders = await excludeFolders([...fileList]);
     setFiles(filesExcludingFolders);
-  }, []);
+  }, [status]);
 
   const clickInputElement = useCallback(() => {
     inputRef.current?.click();
@@ -52,16 +60,17 @@ const useUpload = ({inputRef}: Props) => {
   const upload = useCallback(async () => {
     // [TODO]
     console.log('upload');
+    setStatus('uploading');
   }, []);
 
   useEffect(() => {
     const isOkay = !!files && files?.length > 0;
-    setOkayToUpload(isOkay);
+    setStatus(isOkay ? 'okayToUpload' : 'idle');
   }, [files]);
 
   return {
-    okayToUpload,
     files,
+    status,
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,

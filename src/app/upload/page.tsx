@@ -11,7 +11,7 @@ export default function Upload () {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const {
     files,
-    okayToUpload,
+    status,
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,
@@ -23,8 +23,8 @@ export default function Upload () {
     <main className={styles.page}>
       <header className={styles.header}>
         <Button
-          variant={okayToUpload ? 'contained' : 'outlined'}
-          disabled={!okayToUpload}
+          variant={status === 'okayToUpload' ? 'contained' : 'outlined'}
+          disabled={status !== 'okayToUpload'}
           onClick={upload}
         >
           OK
@@ -33,9 +33,16 @@ export default function Upload () {
       <div className={styles.inputArea}
         onDragOver={onDragOverEvent}
         onDrop={onDropEvent}>
-        <div>Drag and drop files here.</div>
+        <div>
+          {status === 'uploading' ? 'Uploading...' : 'Drag and drop files here.'}
+        </div>
         <input type='file' multiple={true} onChange={onChangeEvent} ref={inputRef} />
-        <Button variant='contained' onClick={clickInputElement}>Choose File</Button>
+        <Button variant='contained'
+          disabled={status === 'uploading'}
+          onClick={clickInputElement}
+        >
+          Choose File
+        </Button>
       </div>
       {!!files?.length && <List
         sx={{minWidth: '300px', maxWidth: '90vw', border: '1px solid #9999', borderRadius: '8px'}}>
