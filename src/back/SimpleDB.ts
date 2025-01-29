@@ -1,4 +1,4 @@
-import {DB, STFEntry, STFFile} from '@/types';
+import {DB, NonEmptyString, STFEntry, STFFile} from '@/types';
 import {z} from 'zod';
 import Sqlite3 from 'better-sqlite3';
 import fs from 'node:fs/promises';
@@ -115,6 +115,20 @@ class SimpleDB implements DB {
       return STFEntry.parse(result);
     } catch (e) {
       console.error('getEntryById error');
+      console.error(e);
+      return null;
+    }
+  };
+
+  async getFileIdsByEntryId (entryId: string) {
+    try {
+      const stmt = this.db.prepare<[string], {id: string}>(`
+        SELECT id FROM file WHERE entryId=?
+      `);
+      const result = stmt.all(entryId).map(({id}) => id);
+      return NonEmptyString.array().parse(result);
+    } catch (e) {
+      console.error('getFileIdsByEntryId error');
       console.error(e);
       return null;
     }

@@ -44,6 +44,7 @@ export type DB = {
   setFileChunk: (file: z.infer<typeof STFFile>, chunkInd: number, chunk: Blob) => Promise<boolean>,
   getEntryById: (id: string) => Promise<z.infer<typeof STFEntry> | null>,
   getFileById: (id: string) => Promise<z.infer<typeof STFFile> | null>,
+  getFileIdsByEntryId: (id: string) => Promise<string[] | null>,
   getFileStream?: (file: z.infer<typeof STFFile>) => Promise<Stream | null>,
   getFileChunk?: (file: z.infer<typeof STFFile>, chunkInd: number) => Promise<Blob | null>,
   // [TODO] deleteEntry: (entry: z.infer<typeof STFEntry>) => Promise<boolean>,
