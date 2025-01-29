@@ -37,7 +37,6 @@ const handleUploadEntryRequest = async (req: Request, entry: z.infer<typeof STFE
   return new Response(JSON.stringify({id}), {status: 200});
 };
 
-// [TODO] Handle empty files (Make empty file if size is zero).
 const handleUploadFileRequest = async (req: Request, fileWithChunk: z.infer<typeof STFFileFromClient>) => {
   checkPermission();
   checkDiskUsage();
@@ -74,7 +73,8 @@ export async function POST (req: Request) {
     if (STFFileFromClient.safeParse(payload).success) {
       return handleUploadFileRequest(req, payload);
     }
-    throw new Error('Cannot reach here');
+    console.error(payload);
+    throw new Error('Unexpected payload');
   } catch (e) {
     console.error('upload api error');
     console.error(e);
