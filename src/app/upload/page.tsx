@@ -11,18 +11,21 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Chip from '@mui/material/Chip';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 export default function Upload () {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const {
     files,
     status,
+    entryId,
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,
     clickInputElement,
     upload,
-    handleError,
+    resetStatus,
   } = useUpload({inputRef});
 
   return (
@@ -60,22 +63,42 @@ export default function Upload () {
         ))}
       </List>}
       <Dialog
-        open={status === 'uploadError'}
-        onClose={handleError}
+        open={status === 'complete' || status === 'uploadError'}
+        onClose={resetStatus}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
         <DialogTitle id="alert-dialog-title">
-          Upload Error
+          {status === 'complete' ? 'Upload Complete' : 'Upload Error'}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            There has been an error when uploading files.
-            Try again.
+            {status === 'complete' &&
+              <>
+                Files have been uploaded succesfully.
+                <br />
+              </>
+            }
+            {status === 'uploadError' &&
+              <>
+                There has been an error when uploading files.
+                <br />
+                Try again.
+              </>
+            }
           </DialogContentText>
+          {status === 'complete' &&
+            <Chip
+              label={new URL(`/download/${entryId}`, window.location.origin).toString()}
+              onClick={() => {
+                navigator.clipboard.writeText(new URL(`/download/${entryId}`, window.location.origin).toString());
+              }}
+              icon={<ContentCopyIcon fontSize='small' />}
+            />
+          }
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleError} autoFocus>
+          <Button onClick={resetStatus} autoFocus>
             Okay
           </Button>
         </DialogActions>

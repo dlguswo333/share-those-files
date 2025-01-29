@@ -33,11 +33,12 @@ type Props = {
   inputRef: RefObject<HTMLInputElement | null>;
 }
 
-type Status = 'idle' | 'okayToUpload' | 'uploading' | 'uploadError';
+type Status = 'idle' | 'okayToUpload' | 'uploading' | 'complete' | 'uploadError';
 
 const useUpload = ({inputRef}: Props) => {
   const [status, setStatus] = useState<Status>('idle');
   const [files, setFiles] = useState<File[] | null>(null);
+  const [entryId, setEntryId] = useState<string | null>(null);
 
   const onDragOverEvent = useCallback((e: DragEvent<HTMLElement>) => {
     e.preventDefault();
@@ -94,6 +95,7 @@ const useUpload = ({inputRef}: Props) => {
         throw new Error();
       }
       const {id: entryId} = IdObject.parse(await res.json());
+      setEntryId(entryId);
 
       for (const file of files) {
         let readBytes = 0;
@@ -129,15 +131,15 @@ const useUpload = ({inputRef}: Props) => {
           chunkInd++;
         }
       }
-      setStatus('idle');
+      setStatus('complete');
     } catch (e) {
       console.error(e);
       setStatus('uploadError');
     }
   }, [files]);
 
-  const handleError = useCallback(() => {
-    if (status !== 'uploadError') {
+  const resetStatus = useCallback(() => {
+    if (status !== 'complete' && status !== 'uploadError') {
       return;
     }
     setStatus('idle');
@@ -154,12 +156,13 @@ const useUpload = ({inputRef}: Props) => {
   return {
     files,
     status,
+    entryId,
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,
     clickInputElement,
     upload,
-    handleError,
+    resetStatus,
   };
 };
 
