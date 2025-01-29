@@ -136,10 +136,20 @@ const useUpload = ({inputRef}: Props) => {
     }
   }, [files]);
 
+  const handleError = useCallback(() => {
+    if (status !== 'uploadError') {
+      return;
+    }
+    setStatus('idle');
+  }, [status]);
+
   useEffect(() => {
+    if (status !== 'idle' && status !== 'okayToUpload') {
+      return;
+    }
     const isOkay = !!files && files?.length > 0;
     setStatus(isOkay ? 'okayToUpload' : 'idle');
-  }, [files]);
+  }, [status, files]);
 
   return {
     files,
@@ -149,6 +159,7 @@ const useUpload = ({inputRef}: Props) => {
     onChangeEvent,
     clickInputElement,
     upload,
+    handleError,
   };
 };
 
