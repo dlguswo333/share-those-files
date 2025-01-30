@@ -7,7 +7,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import {useMemo} from 'react';
 
 type Props = {
-  file: File;
+  file: {name: string, size: number};
 }
 
 const FileItem = ({file}: Props) => {
