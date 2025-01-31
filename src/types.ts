@@ -2,7 +2,7 @@
  * All global types are defined here.
  * For runtime type safety, use zod.
  */
-import {Stream} from 'node:stream';
+import {ReadStream} from 'node:fs';
 import {z} from 'zod';
 
 export const NonEmptyString = z.string().nonempty();
@@ -45,7 +45,7 @@ export type DB = {
   getEntryById: (id: string) => Promise<z.infer<typeof STFEntry> | null>,
   getFileById: (id: string) => Promise<z.infer<typeof STFFile> | null>,
   getFileIdsByEntryId: (id: string) => Promise<string[] | null>,
-  getFileStream?: (file: z.infer<typeof STFFile>) => Promise<Stream | null>,
+  getFileStream?: (file: z.infer<typeof STFFile>) => Promise<ReadStream | null>,
   getFileChunk?: (file: z.infer<typeof STFFile>, chunkInd: number) => Promise<Blob | null>,
   // [TODO] deleteEntry: (entry: z.infer<typeof STFEntry>) => Promise<boolean>,
 };
