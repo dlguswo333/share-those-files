@@ -21,8 +21,11 @@ export default async function Download ({params}: Props) {
     return (
       <main className={styles.page}>
         <header className={styles.header}>
-          Cannot find the upload entry with the id.
-          Maybe it had been deleted long ago?
+          <span className={styles.middle}>
+            Cannot find the upload entry with the id.
+            Maybe it had been deleted long ago?
+          </span>
+          <span className={styles.right} />
         </header>
       </main>
     );
