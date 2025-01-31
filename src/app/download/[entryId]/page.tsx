@@ -1,11 +1,11 @@
 import {Fragment} from 'react';
 import styles from '@/app/download/[entryId]/page.module.css';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import FileItem from '@/app/FileItem';
 import Divider from '@mui/material/Divider';
 import SimpleDB from '@/back/SimpleDB';
 import {STFFile} from '@/types';
+import DownloadButton from './DownloadButton';
 
 type Props = {
   params: Promise<{ entryId: string }>
@@ -36,11 +36,7 @@ export default async function Download ({params}: Props) {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <Button
-          variant='contained'
-        >
-          Download
-        </Button>
+        <DownloadButton downloadUrl={`/api/download/?entryId=${entryId}`} />
       </header>
       {!!files?.length && <List
         sx={{minWidth: '300px', maxWidth: '90vw', border: '1px solid #9999', borderRadius: '8px'}}>
