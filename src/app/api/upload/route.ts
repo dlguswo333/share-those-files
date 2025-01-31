@@ -5,11 +5,11 @@
  */
 import {z} from 'zod';
 import {STFEntryFromClient, STFFileFromClient, DB, STFFile} from '@/types';
-import SimpleDb from '@/back/SimpleDB';
+import IndexDB from '@/back/IndexDB';
 import {Buffer} from 'node:buffer';
 import {randomUUID} from 'node:crypto';
 
-const db: DB = new SimpleDb();
+const db: DB = new IndexDB();
 await db.init();
 
 /**

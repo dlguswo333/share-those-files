@@ -3,7 +3,7 @@ import styles from '@/app/download/[entryId]/page.module.css';
 import List from '@mui/material/List';
 import FileItem from '@/app/FileItem';
 import Divider from '@mui/material/Divider';
-import SimpleDB from '@/back/SimpleDB';
+import IndexDB from '@/back/IndexDB';
 import {STFFile} from '@/types';
 import DownloadButton from './DownloadButton';
 import GoToMainButton from '@/app/MainPageButton';
@@ -14,7 +14,7 @@ type Props = {
 
 export default async function Download ({params}: Props) {
   const {entryId} = await params;
-  const db = new SimpleDB();
+  const db = new IndexDB();
   await db.init();
   const entry = await db.getEntryById(entryId);
   const fileIds = await db.getFileIdsByEntryId(entryId);

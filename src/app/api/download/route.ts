@@ -1,8 +1,8 @@
 import {DB} from '@/types';
-import SimpleDb from '@/back/SimpleDB';
+import IndexDB from '@/back/IndexDB';
 import PromisifiedZipStream from '@/back/PromisifiedZipStream';
 
-const db: DB = new SimpleDb();
+const db: DB = new IndexDB();
 await db.init();
 
 const getZipStreamWithEntries = (fileIds: string[]/** pZipStream: PromisifiedZipStream */) => {
