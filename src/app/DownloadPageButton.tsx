@@ -3,13 +3,18 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {useRouter} from 'next/navigation';
 import {useMemo, useRef, useState} from 'react';
+import useIsClient from './useIsCient';
 
 const DownloadPageButton = () => {
   const [input, setInput] = useState('');
   const router = useRouter();
+  const isClient = useIsClient();
   const textFieldRef = useRef<HTMLDivElement | null>(null);
-  const placeholder = new URL('/download/abcd-1234', window.location.origin).toString();
+  const placeholder = isClient ? new URL('/download/abcd-1234', window.location.origin).toString() : '';
   const isValidURL = useMemo(() => {
+    if (!isClient) {
+      return false;
+    }
     try {
       const url = new URL(input);
       if (url.origin !== window.location.origin) {
@@ -22,7 +27,7 @@ const DownloadPageButton = () => {
     } catch {
       return false;
     }
-  }, [input]);
+  }, [input, isClient]);
   return (
     <Button variant='outlined'
       disableRipple={true}
