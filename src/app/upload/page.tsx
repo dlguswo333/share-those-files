@@ -13,6 +13,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Chip from '@mui/material/Chip';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import GoToMainButton from '../MainPageButton';
 
 export default function Upload () {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -31,6 +32,8 @@ export default function Upload () {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
+        <GoToMainButton />
+        <span />
         <Button
           variant={status === 'okayToUpload' ? 'contained' : 'outlined'}
           disabled={status !== 'okayToUpload'}

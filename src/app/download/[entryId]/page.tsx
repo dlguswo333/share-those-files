@@ -6,6 +6,7 @@ import Divider from '@mui/material/Divider';
 import SimpleDB from '@/back/SimpleDB';
 import {STFFile} from '@/types';
 import DownloadButton from './DownloadButton';
+import MainPageButton from '@/app/MainPageButton';
 
 type Props = {
   params: Promise<{ entryId: string }>
@@ -21,6 +22,7 @@ export default async function Download ({params}: Props) {
     return (
       <main className={styles.page}>
         <header className={styles.header}>
+          <MainPageButton />
           <span className={styles.middle}>
             Cannot find the upload entry with the id.
             Maybe it had been deleted long ago?
@@ -39,6 +41,8 @@ export default async function Download ({params}: Props) {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
+        <MainPageButton />
+        <span className={styles.middle} />
         <DownloadButton downloadUrl={`/api/download/?entryId=${entryId}`} />
       </header>
       {!!files?.length && <List
