@@ -2,9 +2,21 @@ import styles from '@/app/page.module.css';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import DownloadPageButton from './DownloadPageButton';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 
 export default function Home () {
-  return (
+  return <>
+    <AppBar position='sticky'>
+      <Toolbar sx={{justifyContent: 'space-between'}}>
+        <span />
+        <Typography component='h1'>
+          Share Those Files!
+        </Typography>
+        <span />
+      </Toolbar>
+    </AppBar>
     <main className={styles.page}>
       <div className={styles.buttonContainer}>
         <DownloadPageButton />
@@ -15,5 +27,5 @@ export default function Home () {
         </Link>
       </div>
     </main>
-  );
+  </>;
 }

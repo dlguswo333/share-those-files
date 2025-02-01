@@ -12,6 +12,7 @@ const DownloadButton = ({downloadUrl}: Props) => {
 
   return <Button
     variant='contained'
+    disableElevation={true}
     onClick={download}
   >
     Download

@@ -2,19 +2,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
+    justify-content: center;
+    min-height: 80vh;
     padding: 10px 80px;
     gap: 40px;
-}
-
-.page .header {
-    width: 100vw;
-    padding: 0 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
 }
 
 .page .inputArea {
@@ -22,7 +13,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 60px;
+    min-width: 400px;
+    min-height: 250px;
     border: 1px solid #9999;
     border-radius: 8px;
     gap: 20px;

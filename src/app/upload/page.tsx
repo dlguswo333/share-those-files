@@ -16,6 +16,9 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import GoToMainButton from '@/app/MainPageButton';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 
 export default function Upload () {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -32,24 +35,28 @@ export default function Upload () {
     resetStatus,
   } = useUpload({inputRef});
 
-  return (
-    <main className={styles.page}>
-      <header className={styles.header}>
+  return <>
+    <AppBar component='nav' position='sticky'>
+      <Toolbar sx={{justifyContent: 'space-between'}}>
         <GoToMainButton />
-        <span />
         <Button
-          variant={status === 'okayToUpload' ? 'contained' : 'outlined'}
+          variant={status === 'okayToUpload' ? 'contained' : 'text'}
+          disableElevation={true}
           disabled={status !== 'okayToUpload'}
           onClick={upload}
         >
-          OK
+          Upload
         </Button>
-      </header>
+      </Toolbar>
+    </AppBar>
+    <main className={styles.page}>
       <div className={styles.inputArea}
         onDragOver={onDragOverEvent}
         onDrop={onDropEvent}>
         <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '10px'}}>
-          {status === 'uploading' ? 'Uploading...' : 'Drag and drop files here.'}
+          <Typography>
+            {status === 'uploading' ? 'Uploading...' : 'Drag and drop files here.'}
+          </Typography>
           {progress && <>
             <CircularProgress variant="determinate" value={progress.curFilePercent} />
             <div>{progress.curFileName}</div>
@@ -115,5 +122,5 @@ export default function Upload () {
         </DialogActions>
       </Dialog>
     </main>
-  );
+  </>;
 }
