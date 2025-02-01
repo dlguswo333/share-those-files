@@ -13,7 +13,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Chip from '@mui/material/Chip';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import GoToMainButton from '../MainPageButton';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import GoToMainButton from '@/app/MainPageButton';
 
 export default function Upload () {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -21,6 +23,7 @@ export default function Upload () {
     files,
     status,
     entryId,
+    progress,
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,
@@ -45,9 +48,14 @@ export default function Upload () {
       <div className={styles.inputArea}
         onDragOver={onDragOverEvent}
         onDrop={onDropEvent}>
-        <div>
+        <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '10px'}}>
           {status === 'uploading' ? 'Uploading...' : 'Drag and drop files here.'}
-        </div>
+          {progress && <>
+            <CircularProgress variant="determinate" value={progress.curFilePercent} />
+            <div>{progress.curFileName}</div>
+            <div>{`${progress.curFileInd}/${progress.numFiles}`}</div>
+          </>}
+        </Box>
         <input type='file' multiple={true} onChange={onChangeEvent} ref={inputRef} />
         <Button variant='contained'
           disabled={status === 'uploading'}

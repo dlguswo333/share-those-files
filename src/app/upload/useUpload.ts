@@ -1,5 +1,5 @@
 import {blobToBase64} from '@/util';
-import {ChangeEvent, DragEvent, RefObject, useCallback, useEffect, useState} from 'react';
+import {ChangeEvent, DragEvent, RefObject, useCallback, useEffect, useRef, useState} from 'react';
 import {IdObject, NonEmptyString, STFEntryFromClient, STFFileFromClient} from '@/types';
 import {z} from 'zod';
 
@@ -35,10 +35,19 @@ type Props = {
 
 type Status = 'idle' | 'okayToUpload' | 'uploading' | 'complete' | 'uploadError';
 
+type Progress = {
+  curFileName: string;
+  curFilePercent: number;
+  curFileInd: number;
+  numFiles: number;
+};
+
 const useUpload = ({inputRef}: Props) => {
   const [status, setStatus] = useState<Status>('idle');
   const [files, setFiles] = useState<File[] | null>(null);
   const [entryId, setEntryId] = useState<string | null>(null);
+  const [progress, setProgress] = useState<Progress | null>(null);
+  const shouldUpdateProgress = useRef(true);
 
   const onDragOverEvent = useCallback((e: DragEvent<HTMLElement>) => {
     e.preventDefault();
@@ -74,6 +83,23 @@ const useUpload = ({inputRef}: Props) => {
     inputRef.current?.click();
   }, [inputRef]);
 
+  const updateProgress = useCallback((curFileName: string, curFilePercent: number, curFileInd: number, numFiles: number) => {
+    if (!shouldUpdateProgress.current) {
+      return;
+    }
+    const UPDATE_INTERVAL = 800;
+    shouldUpdateProgress.current = false;
+    setTimeout(() => {
+      shouldUpdateProgress.current = true;
+    }, UPDATE_INTERVAL);
+    setProgress({
+      curFileName,
+      curFilePercent,
+      curFileInd,
+      numFiles,
+    });
+  }, []);
+
   const upload = useCallback(async () => {
     try {
       setStatus('uploading');
@@ -97,9 +123,11 @@ const useUpload = ({inputRef}: Props) => {
       const {id: entryId} = IdObject.parse(await res.json());
       setEntryId(entryId);
 
-      for (const file of files) {
+      for (const [fileInd, file] of files.entries()) {
         let readBytes = 0;
+        const CHUNK_SIZE = 1024 * 1024;
         let chunkInd = 0;
+        const numChunks = Math.ceil(file.size / CHUNK_SIZE);
         let fileId = '';
         if (file.size === 0) {
           const emptyBlob = new Blob();
@@ -114,7 +142,6 @@ const useUpload = ({inputRef}: Props) => {
           continue;
         }
         while (readBytes < file.size) {
-          const CHUNK_SIZE = 1024 * 1024;
           const chunk = file.slice(readBytes, readBytes + CHUNK_SIZE);
           readBytes += chunk.size;
           const stfFile = await getStfFile(file, fileId, entryId, chunk, chunkInd);
@@ -129,6 +156,7 @@ const useUpload = ({inputRef}: Props) => {
           // fileId must be non empty string here.
           NonEmptyString.parse(fileId);
           chunkInd++;
+          updateProgress(file.name, chunkInd / numChunks * 100, fileInd, files.length);
         }
       }
       setStatus('complete');
@@ -136,7 +164,7 @@ const useUpload = ({inputRef}: Props) => {
       console.error(e);
       setStatus('uploadError');
     }
-  }, [files]);
+  }, [files, updateProgress]);
 
   const resetStatus = useCallback(() => {
     if (status !== 'complete' && status !== 'uploadError') {
@@ -153,10 +181,18 @@ const useUpload = ({inputRef}: Props) => {
     setStatus(isOkay ? 'okayToUpload' : 'idle');
   }, [status, files]);
 
+  useEffect(() => {
+    if (status === 'uploading') {
+      return;
+    }
+    setProgress(null);
+  }, [status]);
+
   return {
     files,
     status,
     entryId,
+    progress,
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,
