@@ -29,9 +29,21 @@ const checkDiskUsage = () => {
   return true;
 };
 
+/**
+ * It checks the date to delete then entry.
+ * It does not strictly check; rather it rule out outliar dates.
+ */
+const checkDeleteDate = (entry: z.infer<typeof STFEntryFromClient>) => {
+  const minDate = new Date();
+  const maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + 14);
+  z.date().min(minDate).max(maxDate).parse(new Date(entry.deleteDate));
+};
+
 const handleUploadEntryRequest = async (req: Request, entry: z.infer<typeof STFEntryFromClient>) => {
   checkPermission();
   checkDiskUsage();
+  checkDeleteDate(entry);
   const id = randomUUID();
   await db.setEntry({...entry, id, uploadDate: new Date().toISOString()});
   return new Response(JSON.stringify({id}), {status: 200});
