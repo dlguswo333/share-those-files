@@ -19,11 +19,8 @@ import GoToMainButton from '@/app/MainPageButton';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 
 export default function Upload () {
   const inputRef = useRef<HTMLInputElement | null>(null);
