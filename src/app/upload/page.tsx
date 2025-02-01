@@ -71,7 +71,9 @@ export default function Upload () {
           Choose File
         </Button>
       </div>
-      {!!files?.length && <List
+    </main>
+    {!!files?.length && <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+      <List
         sx={{minWidth: '300px', maxWidth: '90vw', border: '1px solid #9999', borderRadius: '8px'}}>
         {files.map((file, index) => (
           <Fragment key={index}>
@@ -79,33 +81,34 @@ export default function Upload () {
             {index !== files.length - 1 && <Divider component='li' />}
           </Fragment>
         ))}
-      </List>}
-      <Dialog
-        open={status === 'complete' || status === 'uploadError'}
-        onClose={resetStatus}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id="alert-dialog-title">
-          {status === 'complete' ? 'Upload Complete' : 'Upload Error'}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {status === 'complete' &&
+      </List>
+    </Box>}
+    <Dialog
+      open={status === 'complete' || status === 'uploadError'}
+      onClose={resetStatus}
+      aria-labelledby='alert-dialog-title'
+      aria-describedby='alert-dialog-description'
+    >
+      <DialogTitle id="alert-dialog-title">
+        {status === 'complete' ? 'Upload Complete' : 'Upload Error'}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {status === 'complete' &&
               <>
                 Files have been uploaded succesfully.
                 <br />
               </>
-            }
-            {status === 'uploadError' &&
+          }
+          {status === 'uploadError' &&
               <>
                 There has been an error when uploading files.
                 <br />
                 Try again.
               </>
-            }
-          </DialogContentText>
-          {status === 'complete' &&
+          }
+        </DialogContentText>
+        {status === 'complete' &&
             <Chip
               label={new URL(`/download/${entryId}`, window.location.origin).toString()}
               onClick={() => {
@@ -113,14 +116,13 @@ export default function Upload () {
               }}
               icon={<ContentCopyIcon fontSize='small' />}
             />
-          }
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={resetStatus} autoFocus>
+        }
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={resetStatus} autoFocus>
             Okay
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </main>
+        </Button>
+      </DialogActions>
+    </Dialog>
   </>;
 }
