@@ -2,7 +2,7 @@
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {useRouter} from 'next/navigation';
-import {useMemo, useRef, useState} from 'react';
+import {useCallback, useMemo, useRef, useState} from 'react';
 import useIsClient from './useIsCient';
 
 const DownloadPageButton = () => {
@@ -28,6 +28,13 @@ const DownloadPageButton = () => {
       return false;
     }
   }, [input, isClient]);
+
+  const navigate = useCallback(() => {
+    if (isValidURL) {
+      router.push(new URL(input).pathname);
+    }
+  }, [input, isValidURL, router]);
+
   return (
     <Button variant='outlined'
       disableRipple={true}
@@ -37,9 +44,7 @@ const DownloadPageButton = () => {
         if (textFieldRef.current?.contains(target)) {
           return;
         }
-        if (isValidURL) {
-          router.push(new URL(input).pathname);
-        }
+        navigate();
       }}
       sx={{
         minWidth: 300,
@@ -58,6 +63,12 @@ const DownloadPageButton = () => {
         label="Download URL"
         variant="outlined"
         placeholder={placeholder}
+        onKeyUp={(e) => {
+          if (e.key !== 'Enter') {
+            return;
+          }
+          navigate();
+        }}
         onChange={e => setInput(e.target.value)}
         error={!!input.length && !isValidURL}
         // Pass whitespace to helperText to maintain uniform height.
