@@ -112,7 +112,12 @@ class SimpleDB implements DB {
         SELECT * FROM entry WHERE id=?
       `);
       const result = stmt.get(id);
-      return STFEntry.parse(result);
+      const entry = STFEntry.parse(result);
+      const isEntryTooOld = new Date().toISOString() >= entry.deleteDate;
+      if (isEntryTooOld) {
+        return null;
+      }
+      return entry;
     } catch (e) {
       console.error('getEntryById error');
       console.error(e);
