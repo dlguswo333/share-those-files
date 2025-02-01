@@ -1,9 +1,12 @@
 import Button from '@mui/material/Button';
+import Link from 'next/link';
 
 const GoToMainButton = () => {
-  return <Button variant='outlined' href='/'>
-    Main
-  </Button>;
+  return <Link legacyBehavior={true} passHref={true} href='/' >
+    <Button variant='outlined'>
+      Main
+    </Button>
+  </Link>;
 };
 
 export default GoToMainButton;

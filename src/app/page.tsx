@@ -8,11 +8,11 @@ export default function Home () {
     <main className={styles.page}>
       <div className={styles.buttonContainer}>
         <DownloadPageButton />
-        <Button variant='outlined' sx={{minWidth: 300, aspectRatio: 1, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <Link href='/upload' className={styles.full}>
+        <Link legacyBehavior={true} passHref={true} href='/upload'>
+          <Button variant='outlined' sx={{minWidth: 300, aspectRatio: 1}} >
             Upload
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </div>
     </main>
   );
