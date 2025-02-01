@@ -19,6 +19,11 @@ import GoToMainButton from '@/app/MainPageButton';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 export default function Upload () {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -30,6 +35,7 @@ export default function Upload () {
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,
+    onDeleteDateChange,
     clickInputElement,
     upload,
     resetStatus,
@@ -72,17 +78,35 @@ export default function Upload () {
         </Button>
       </div>
     </main>
-    {!!files?.length && <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-      <List
-        sx={{minWidth: '300px', maxWidth: '90vw', border: '1px solid #9999', borderRadius: '8px'}}>
-        {files.map((file, index) => (
-          <Fragment key={index}>
-            <FileItem key={file.name} file={file} />
-            {index !== files.length - 1 && <Divider component='li' />}
-          </Fragment>
-        ))}
-      </List>
-    </Box>}
+    {!!files?.length &&
+      <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingBottom: '100px'}}>
+        <TextField
+          select={true}
+          sx={{margin: '10px', minWidth: '400px'}}
+          label='This upload will be deleted in:'
+          defaultValue={24}
+          slotProps={{select: {MenuProps: {disableScrollLock: true}}}}
+          onChange={(e) => {
+            const date = new Date();
+            date.setHours(date.getHours() + Number(e.target.value));
+            onDeleteDateChange(date);
+          }}
+        >
+          <MenuItem value={24}>One Day</MenuItem>
+          <MenuItem value={72}>Three Days</MenuItem>
+          <MenuItem value={168}>One Week</MenuItem>
+        </TextField>
+        <List
+          sx={{minWidth: '400px', maxWidth: '90vw', border: '1px solid #9999', borderRadius: '8px'}}>
+          {files.map((file, index) => (
+            <Fragment key={index}>
+              <FileItem key={file.name} file={file} />
+              {index !== files.length - 1 && <Divider component='li' />}
+            </Fragment>
+          ))}
+        </List>
+      </Box>
+    }
     <Dialog
       open={status === 'complete' || status === 'uploadError'}
       onClose={resetStatus}
@@ -95,32 +119,32 @@ export default function Upload () {
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           {status === 'complete' &&
-              <>
-                Files have been uploaded succesfully.
-                <br />
-              </>
+            <>
+              Files have been uploaded succesfully.
+              <br />
+            </>
           }
           {status === 'uploadError' &&
-              <>
-                There has been an error when uploading files.
-                <br />
-                Try again.
-              </>
+            <>
+              There has been an error when uploading files.
+              <br />
+              Try again.
+            </>
           }
         </DialogContentText>
         {status === 'complete' &&
-            <Chip
-              label={new URL(`/download/${entryId}`, window.location.origin).toString()}
-              onClick={() => {
-                navigator.clipboard.writeText(new URL(`/download/${entryId}`, window.location.origin).toString());
-              }}
-              icon={<ContentCopyIcon fontSize='small' />}
-            />
+          <Chip
+            label={new URL(`/download/${entryId}`, window.location.origin).toString()}
+            onClick={() => {
+              navigator.clipboard.writeText(new URL(`/download/${entryId}`, window.location.origin).toString());
+            }}
+            icon={<ContentCopyIcon fontSize='small' />}
+          />
         }
       </DialogContent>
       <DialogActions>
         <Button onClick={resetStatus} autoFocus>
-            Okay
+          Okay
         </Button>
       </DialogActions>
     </Dialog>

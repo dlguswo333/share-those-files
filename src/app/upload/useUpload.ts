@@ -47,6 +47,11 @@ const useUpload = ({inputRef}: Props) => {
   const [files, setFiles] = useState<File[] | null>(null);
   const [entryId, setEntryId] = useState<string | null>(null);
   const [progress, setProgress] = useState<Progress | null>(null);
+  const [deleteDate, setDeleteDate] = useState(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 3);
+    return date;
+  });
   const shouldUpdateProgress = useRef(true);
 
   const onDragOverEvent = useCallback((e: DragEvent<HTMLElement>) => {
@@ -79,6 +84,10 @@ const useUpload = ({inputRef}: Props) => {
     setFiles(filesExcludingFolders);
   }, [status]);
 
+  const onDeleteDateChange = useCallback((date: Date) => {
+    setDeleteDate(date);
+  }, []);
+
   const clickInputElement = useCallback(() => {
     inputRef.current?.click();
   }, [inputRef]);
@@ -106,9 +115,6 @@ const useUpload = ({inputRef}: Props) => {
       if (files === null) {
         return;
       }
-      const deleteDate = new Date();
-      // [TODO] Allow users to customize it.
-      deleteDate.setDate(deleteDate.getDate() + 3);
       const entry = {
         length: files.length,
         deleteDate: deleteDate.toISOString(),
@@ -164,7 +170,7 @@ const useUpload = ({inputRef}: Props) => {
       console.error(e);
       setStatus('uploadError');
     }
-  }, [files, updateProgress]);
+  }, [files, deleteDate, updateProgress]);
 
   const resetStatus = useCallback(() => {
     if (status !== 'complete' && status !== 'uploadError') {
@@ -193,9 +199,11 @@ const useUpload = ({inputRef}: Props) => {
     status,
     entryId,
     progress,
+    deleteDate,
     onDragOverEvent,
     onDropEvent,
     onChangeEvent,
+    onDeleteDateChange,
     clickInputElement,
     upload,
     resetStatus,
