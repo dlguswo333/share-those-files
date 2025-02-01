@@ -113,8 +113,8 @@ class SimpleDB implements DB {
       `);
       const result = stmt.get(id);
       const entry = STFEntry.parse(result);
-      const isEntryTooOld = new Date().toISOString() >= entry.deleteDate;
-      if (isEntryTooOld) {
+      const isEntryToBeDeleted = new Date().toISOString() >= entry.deleteDate;
+      if (isEntryToBeDeleted) {
         return null;
       }
       return entry;
