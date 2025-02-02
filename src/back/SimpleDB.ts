@@ -17,9 +17,9 @@ class SimpleDB implements DB {
   directory: string;
 
   constructor () {
-    this.directory = 'simpleDB/';
+    this.directory = 'db/simpleDB/';
     if (!existsSync(this.directory)) {
-      mkdirSync(this.directory);
+      mkdirSync(this.directory, {recursive: true});
     }
     this.db = Sqlite3(path.join(this.directory, 'db.db'));
   }
