@@ -47,5 +47,5 @@ export type DB = {
   getFileIdsByEntryId: (id: string) => Promise<string[] | null>,
   getFileStream?: (file: z.infer<typeof STFFile>) => Promise<ReadStream | null>,
   getFileChunk?: (file: z.infer<typeof STFFile>, chunkInd: number) => Promise<Blob | null>,
-  // [TODO] deleteEntry: (entry: z.infer<typeof STFEntry>) => Promise<boolean>,
+  handleObsoleteEntries: () => Promise<boolean>,
 };

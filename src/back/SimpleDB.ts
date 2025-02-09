@@ -15,6 +15,7 @@ import path from 'node:path';
 class SimpleDB implements DB {
   db: Sqlite3.Database;
   directory: string;
+  initialized = false;
 
   constructor () {
     this.directory = 'db/simpleDB/';
@@ -24,11 +25,14 @@ class SimpleDB implements DB {
     this.db = Sqlite3(path.join(this.directory, 'db.db'));
   }
 
-  getFilePath (file: z.infer<typeof STFFile>) {
+  private getFilePath (file: Pick<z.infer<typeof STFFile>, 'id' | 'entryId'>) {
     return path.join(this.directory, `${file.entryId}-${file.id}`);
   }
 
   async init () {
+    if (this.initialized) {
+      return;
+    }
     this.db.pragma('journal_mode = WAL');
     this.db.pragma('foreign_keys = ON');
 
@@ -52,6 +56,17 @@ class SimpleDB implements DB {
 
     entryTableCreateStmt.run();
     fileTableCreateStmt.run();
+
+    const oneHour = 1000 * 60 * 60;
+    const INTERVAL = oneHour;
+    const cleanup = () => {
+      setTimeout(() => {
+        this.handleObsoleteEntries();
+        cleanup();
+      }, INTERVAL);
+    };
+
+    cleanup();
   };
 
   async setEntry (entry: z.infer<typeof STFEntry>) {
@@ -163,6 +178,65 @@ class SimpleDB implements DB {
       console.error('setFile error');
       console.error(e);
       return null;
+    }
+  }
+
+  private getObsoleteEntryIds () {
+    try {
+      const curDate = new Date().toISOString();
+      const stmt = this.db.prepare<string, {id: string}>(`
+        SELECT id FROM entry WHERE deleteDate < ?
+      `);
+      const result = stmt.all(curDate).map(({id}) => id);
+      return NonEmptyString.array().parse(result);
+    } catch (e) {
+      console.error('getObsoleteEntryIds error');
+      console.error(e);
+      return null;
+    }
+  }
+
+  private removeFileById (id: string) {
+    try {
+      const stmt = this.db.prepare<string>(`
+        DELETE FROM file WHERE id = ?
+      `);
+      const result = stmt.run(id);
+      if (result.changes === 0) {
+        throw new Error('No file with the id found');
+      }
+      return true;
+    } catch (e) {
+      console.error('removeFileById error');
+      console.error(e);
+      return false;
+    }
+  }
+
+  /** This DB will not actually remove entries but files only for free disk. */
+  async handleObsoleteEntries () {
+    try {
+      const entryIds = this.getObsoleteEntryIds();
+      if (entryIds === null) {
+        throw new Error('entryIds is null');
+      }
+      const removeObsoleteFilesPromises = entryIds.map(async entryId => {
+        const fileIds = await this.getFileIdsByEntryId(entryId);
+        if (fileIds === null) {
+          return;
+        }
+        const removeFilesWithEntryId = fileIds.map(fileId => {
+          this.removeFileById(fileId);
+          return fs.rm(this.getFilePath({id: fileId, entryId}));
+        });
+        await Promise.all(removeFilesWithEntryId);
+      });
+      await Promise.all(removeObsoleteFilesPromises);
+      return true;
+    } catch (e) {
+      console.error('removeObsoleteEntries error');
+      console.error(e);
+      return false;
     }
   }
 }
