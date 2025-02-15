@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import {useRouter} from 'next/navigation';
 import {ComponentProps, useCallback, useMemo, useRef, useState} from 'react';
 import useIsClient from './useIsCient';
+import styles from './page.module.css';
 
 const DownloadPageButton = () => {
   const [input, setInput] = useState('');
@@ -57,29 +58,17 @@ const DownloadPageButton = () => {
   }, [input, isValidURL, router]);
 
   return (
-    <Button variant='outlined'
-      disableRipple={true}
-      color={buttonColor}
-      onClick={(e) => {
-        const target = e.target as HTMLElement;
-        if (textFieldRef.current?.contains(target)) {
-          return;
-        }
-        navigate();
-      }}
-      sx={{
-        minWidth: 300,
-        aspectRatio: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: '10px'
-      }}
-    >
-      Download
+    <div className={styles.buttonWrapper}>
       <TextField
         ref={textFieldRef}
+        sx={{
+          position: 'absolute',
+          zIndex: 10,
+          top: '60%',
+          left: '50%',
+          transform: 'translate(-50%, 0)',
+          width: '80%'
+        }}
         id="outlined-basic"
         label="Download URL"
         variant="outlined"
@@ -94,7 +83,29 @@ const DownloadPageButton = () => {
         error={!!input.length && !isValidURL}
         helperText={textFieldHelperText}
       />
-    </Button>
+      <Button variant='outlined'
+        disabled={!isValidURL}
+        color={buttonColor}
+        onClick={(e) => {
+          const target = e.target as HTMLElement;
+          if (textFieldRef.current?.contains(target)) {
+            return;
+          }
+          navigate();
+        }}
+        sx={{
+          minWidth: 300,
+          aspectRatio: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '10px'
+        }}
+      >
+        Download
+      </Button>
+    </div>
   );
 };
 
