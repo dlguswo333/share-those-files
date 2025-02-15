@@ -9,6 +9,7 @@ import path from 'node:path';
  * As name suggests, this is a naively implemented DB for storing entries and files.
  * Entries and files are stored using sqlite3.
  * File chunks are stored as native files.
+ * This implementation does not permit overlapping file name in the same entry.
  *
  * Caution: This will only work on single threaded runtime environment.
  */
@@ -44,13 +45,15 @@ class SimpleDB implements DB {
       deleteDate TEXT NOT NULL
       )
     `);
+    // This implementation does not permit overlapping file name in the same entry.
     const fileTableCreateStmt = this.db.prepare(`
       CREATE TABLE IF NOT EXISTS file (
       id TEXT PRIMARY KEY NOT NULL,
       entryId TEXT NOT NULL,
       name TEXT NOT NULL,
       size INTEGER NOT NULL DEFAULT 0,
-      FOREIGN KEY(entryId) REFERENCES entry(id)
+      FOREIGN KEY(entryId) REFERENCES entry(id),
+      UNIQUE(entryId, name)
       )
     `);
 
