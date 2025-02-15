@@ -40,7 +40,7 @@ const checkDeleteDate = (entry: z.infer<typeof STFEntryFromClient>) => {
   z.date().min(minDate).max(maxDate).parse(new Date(entry.deleteDate));
 };
 
-const handleUploadEntryRequest = async (req: Request, entry: z.infer<typeof STFEntryFromClient>) => {
+const handleUploadEntryRequest = async (_: Request, entry: z.infer<typeof STFEntryFromClient>) => {
   checkPermission();
   checkDiskUsage();
   checkDeleteDate(entry);
@@ -49,7 +49,7 @@ const handleUploadEntryRequest = async (req: Request, entry: z.infer<typeof STFE
   return new Response(JSON.stringify({id}), {status: 200});
 };
 
-const handleUploadFileRequest = async (req: Request, fileWithChunk: z.infer<typeof STFFileFromClient>) => {
+const handleUploadFileRequest = async (_: Request, fileWithChunk: z.infer<typeof STFFileFromClient>) => {
   checkPermission();
   checkDiskUsage();
   const entry = await db.getEntryById(fileWithChunk.entryId);
