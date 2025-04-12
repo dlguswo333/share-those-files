@@ -131,7 +131,7 @@ const useUpload = ({inputRef}: Props) => {
 
       for (const [fileInd, file] of files.entries()) {
         let readBytes = 0;
-        const CHUNK_SIZE = 1024 * 1024;
+        const CHUNK_SIZE = 4 * 1024 * 1024;
         let chunkInd = 0;
         const numChunks = Math.ceil(file.size / CHUNK_SIZE);
         let fileId = '';
