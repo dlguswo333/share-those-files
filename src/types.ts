@@ -15,7 +15,8 @@ export const STFFile = z.object({
   // numChunks: z.number().nonnegative().finite().int(),
 });
 export const STFFileFromClient = STFFile.extend({
-  chunk: z.string().base64(),
+  // Checking base64 string is good for stability, but it slows down the app significantly.
+  chunk: z.string(),
   chunkInd: z.number().nonnegative().finite().int(),
 }).partial({
   id: true,
