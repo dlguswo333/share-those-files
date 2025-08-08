@@ -4,7 +4,7 @@ import useUpload from './useUpload';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import FileItem from '@/app/FileItem';
-import {Fragment, useRef} from 'react';
+import {Fragment, useMemo, useRef} from 'react';
 import Divider from '@mui/material/Divider';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -21,6 +21,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import QRCode from 'react-qr-code';
+import useIsClient from '../useIsCient';
 
 export default function Upload () {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -37,6 +39,13 @@ export default function Upload () {
     upload,
     resetStatus,
   } = useUpload({inputRef});
+  const isClient = useIsClient();
+  const downloadUrl = useMemo(() => {
+    if (isClient && entryId) {
+      return new URL(`/download/${entryId}`, window.location.origin).toString();
+    }
+    return '';
+  }, [isClient, entryId]);
 
   return <>
     <AppBar component='nav' position='sticky'>
@@ -119,6 +128,8 @@ export default function Upload () {
             <>
               Files have been uploaded succesfully.
               <br />
+              The URL will not be retrievable once you close this dialog.
+              <br />
             </>
           }
           {status === 'uploadError' &&
@@ -129,14 +140,18 @@ export default function Upload () {
             </>
           }
         </DialogContentText>
-        {status === 'complete' &&
-          <Chip
-            label={new URL(`/download/${entryId}`, window.location.origin).toString()}
-            onClick={() => {
-              navigator.clipboard.writeText(new URL(`/download/${entryId}`, window.location.origin).toString());
-            }}
-            icon={<ContentCopyIcon fontSize='small' />}
-          />
+        {status === 'complete' && <>
+            <Chip
+              label={downloadUrl}
+              onClick={() => {
+                navigator.clipboard.writeText(downloadUrl);
+              }}
+              icon={<ContentCopyIcon fontSize='small' />}
+            />
+            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingTop: '30px', paddingBottom: '30px'}}>
+              <QRCode value={downloadUrl} size={180} />
+            </Box>
+          </>
         }
       </DialogContent>
       <DialogActions>
