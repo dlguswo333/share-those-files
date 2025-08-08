@@ -148,7 +148,18 @@ export default function Upload () {
               }}
               icon={<ContentCopyIcon fontSize='small' />}
             />
-            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingTop: '30px', paddingBottom: '30px'}}>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: 'fit-content',
+              height: 'fit-content',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+              margin: '10px auto',
+              backgroundColor: 'white',
+              borderRadius: '10px',
+            }}>
               <QRCode value={downloadUrl} size={180} />
             </Box>
           </>
