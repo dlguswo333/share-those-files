@@ -85,10 +85,20 @@ export default function Upload () {
       </div>
     </main>
     {!!files?.length &&
-      <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingBottom: '100px'}}>
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '96vw',
+        maxWidth: '400px',
+        paddingBottom: '100px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      }}>
         <TextField
           select={true}
-          sx={{margin: '10px', minWidth: '400px'}}
+          sx={{margin: '10px', width: '100%', maxWidth: '400px'}}
           label='This upload will be deleted in:'
           defaultValue={24}
           slotProps={{select: {MenuProps: {disableScrollLock: true}}}}
@@ -103,7 +113,7 @@ export default function Upload () {
           <MenuItem value={168}>One Week</MenuItem>
         </TextField>
         <List
-          sx={{minWidth: '400px', maxWidth: '90vw', border: '1px solid #9999', borderRadius: '8px'}}>
+          sx={{width: '100%', border: '1px solid #9999', borderRadius: '8px'}}>
           {files.map((file, index) => (
             <Fragment key={index}>
               <FileItem key={file.name} file={file} />
@@ -141,28 +151,28 @@ export default function Upload () {
           }
         </DialogContentText>
         {status === 'complete' && <>
-            <Chip
-              label={downloadUrl}
-              onClick={() => {
-                navigator.clipboard.writeText(downloadUrl);
-              }}
-              icon={<ContentCopyIcon fontSize='small' />}
-            />
-            <Box sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: 'fit-content',
-              height: 'fit-content',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '20px',
-              margin: '10px auto',
-              backgroundColor: 'white',
-              borderRadius: '10px',
-            }}>
-              <QRCode value={downloadUrl} size={180} />
-            </Box>
-          </>
+          <Chip
+            label={downloadUrl}
+            onClick={() => {
+              navigator.clipboard.writeText(downloadUrl);
+            }}
+            icon={<ContentCopyIcon fontSize='small' />}
+          />
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: 'fit-content',
+            height: 'fit-content',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            margin: '10px auto',
+            backgroundColor: 'white',
+            borderRadius: '10px',
+          }}>
+            <QRCode value={downloadUrl} size={180} />
+          </Box>
+        </>
         }
       </DialogContent>
       <DialogActions>
