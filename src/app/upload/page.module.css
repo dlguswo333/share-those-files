@@ -2,8 +2,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 80vh;
+    justify-content: flex-end;
+    /* Approx. Center the input area. */
+    min-height: calc(50vh - 56px + 125px);
     padding: 10px 80px;
     gap: 40px;
 }
@@ -13,7 +14,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 400px;
+    min-width: min(94vw, 400px);
     min-height: 250px;
     border: 1px solid #9999;
     border-radius: 8px;
