@@ -29,7 +29,7 @@ const FileItem = ({file}: Props) => {
     <ListItemAvatar>
       <DescriptionIcon />
     </ListItemAvatar>
-    <ListItemText primary={name} secondary={prettySize} />
+    <ListItemText primary={name} secondary={prettySize} sx={{wordBreak: 'break-word'}} />
   </ListItem>;
 };
 
