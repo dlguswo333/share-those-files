@@ -60,7 +60,7 @@ const useUpload = ({inputRef}: Props) => {
 
   const onDropEvent = useCallback(async (e: DragEvent<HTMLElement>) => {
     e.preventDefault();
-    if (status === 'uploading') {
+    if (status === 'parsing' || status === 'uploading') {
       return;
     }
     setStatus('parsing');
@@ -75,7 +75,7 @@ const useUpload = ({inputRef}: Props) => {
   }, [inputRef, status]);
 
   const onChangeEvent = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
-    if (status === 'uploading') {
+    if (status === 'parsing' || status === 'uploading') {
       return;
     }
     const fileList = e.target.files;
