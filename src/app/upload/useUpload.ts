@@ -33,7 +33,7 @@ type Props = {
   inputRef: RefObject<HTMLInputElement | null>;
 }
 
-type Status = 'idle' | 'okayToUpload' | 'uploading' | 'complete' | 'uploadError';
+type Status = 'idle' | 'parsing' | 'okayToUpload' | 'uploading' | 'complete' | 'uploadError';
 
 type Progress = {
   curFileName: string;
@@ -63,10 +63,12 @@ const useUpload = ({inputRef}: Props) => {
     if (status === 'uploading') {
       return;
     }
+    setStatus('parsing');
     const fileList = e.dataTransfer.files;
 
     const filesExcludingFolders = await excludeFolders([...fileList]);
     setFiles(filesExcludingFolders);
+    setStatus('okayToUpload');
     if (inputRef.current) {
       inputRef.current.files = fileList;
     }
@@ -80,8 +82,10 @@ const useUpload = ({inputRef}: Props) => {
     if (!fileList) {
       return;
     }
+    setStatus('parsing');
     const filesExcludingFolders = await excludeFolders([...fileList]);
     setFiles(filesExcludingFolders);
+    setStatus('okayToUpload');
   }, [status]);
 
   const onDeleteDateChange = useCallback((date: Date) => {

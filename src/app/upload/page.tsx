@@ -77,11 +77,14 @@ export default function Upload () {
         </Box>
         <input type='file' multiple={true} onChange={onChangeEvent} ref={inputRef} />
         <Button variant='contained'
-          disabled={status === 'uploading'}
+          disabled={status === 'parsing' || status === 'uploading'}
           onClick={clickInputElement}
         >
           Choose File
         </Button>
+        {status === 'parsing' && <>
+          <CircularProgress />
+        </>}
       </div>
     </main>
     {!!files?.length &&
